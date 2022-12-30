@@ -45,7 +45,8 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        raise NotImplementedError(f'Нужно переопределить метод в классе{self.__class__.__name__}')
+        raise NotImplementedError(f'Нужно переопределить метод в классе'
+                                  f' {self.__class__.__name__}')
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -121,7 +122,9 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list[int, float]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_classes: dict[str, Training] = {'SWM': Swimming, 'RUN': Running, 'WLK': SportsWalking}
+    training_classes: dict[str, Training] = {'SWM': Swimming,
+                                             'RUN': Running,
+                                             'WLK': SportsWalking}
     try:
         train: Training = training_classes[workout_type]  # type: ignore
     except KeyError as e:
