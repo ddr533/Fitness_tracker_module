@@ -120,7 +120,7 @@ class Swimming(Training):
                 * self.weight * self.duration)
 
 
-def read_package(workout_type: str, data: list[int]) -> Training:
+def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
     training_classes: dict[str, Training] = {'SWM': Swimming,
                                              'RUN': Running,
