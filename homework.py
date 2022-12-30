@@ -1,27 +1,27 @@
+from dataclasses import dataclass
+
+
+@dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-    def __init__(self,
-                 training_type: str,
-                 duration: float,
-                 distance: float,
-                 speed: float,
-                 calories: float) -> None:
-        self.training_type = training_type
-        self.duration = duration
-        self.distance = distance
-        self.speed = speed
-        self.calories = calories
+
+    training_type: str
+    duration: float
+    distance: float
+    speed: float
+    calories: float
 
     def get_message(self) -> str:
         return (f'Тип тренировки: {self.training_type}; '
-                f'Длительность: {round(self.duration, 3):.3f} ч.; '
-                f'Дистанция: {round(self.distance, 3):.3f} км; '
-                f'Ср. скорость: {round(self.speed, 3):.3f} км/ч; '
-                f'Потрачено ккал: {round(self.calories, 3):.3f}.')
+                f'Длительность: {self.duration:.3f} ч.; '
+                f'Дистанция: {self.distance:.3f} км; '
+                f'Ср. скорость: {self.speed:.3f} км/ч; '
+                f'Потрачено ккал: {self.calories:.3f}.')
 
 
 class Training:
     """Базовый класс тренировки."""
+
     LEN_STEP = 0.65
     M_IN_KM = 1000
     MIN_IN_H = 60
@@ -45,7 +45,7 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        pass
+        raise NotImplementedError(f'Нужно переопределить метод в классе{self.__class__.__name__}')
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -58,6 +58,7 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
+
     CALORIES_MEAN_SPEED_MULTIPLIER = 18
     CALORIES_MEAN_SPEED_SHIFT = 1.79
 
@@ -69,6 +70,7 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
+
     CALORIES_WEIGHT_MULTIPLIER = 0.035
     CALORIES_SPEED_HEIGHT_MULTIPLIER = 0.029
     KMH_IN_MSEC = round(1000 / 3600, 3)
@@ -92,6 +94,7 @@ class SportsWalking(Training):
 
 class Swimming(Training):
     """Тренировка: плавание."""
+
     LEN_STEP = 1.38
     CALORIES_MEAN_SPEED_SHIFT = 1.1
     CALORIES_MEAN_SPEED_MULTIPLIER = 2
@@ -116,14 +119,14 @@ class Swimming(Training):
                 * self.weight * self.duration)
 
 
-def read_package(workout_type: str, data: list) -> Training:
+def read_package(workout_type: str, data: list[int, float]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_classes = {'SWM': Swimming, 'RUN': Running, 'WLK': SportsWalking}
+    training_classes: dict[str, Training] = {'SWM': Swimming, 'RUN': Running, 'WLK': SportsWalking}
     try:
-        train = training_classes[workout_type]
-        return train(*data)
+        train: Training = training_classes[workout_type]  # type: ignore
     except KeyError as e:
         print('Аббривиатура тренировки не найдена', e)
+    return train(*data)  # type: ignore
 
 
 def main(training: Training) -> None:
