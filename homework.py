@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Dict, List, Union, ClassVar
 
 
 @dataclass
@@ -19,21 +20,17 @@ class InfoMessage:
                 f'Потрачено ккал: {self.calories:.3f}.')
 
 
+@dataclass()
 class Training:
     """Базовый класс тренировки."""
 
-    LEN_STEP = 0.65
-    M_IN_KM = 1000
-    MIN_IN_H = 60
+    LEN_STEP: ClassVar = 0.65
+    M_IN_KM: ClassVar = 1000
+    MIN_IN_H: ClassVar = 60
 
-    def __init__(self,
-                 action: int,
-                 duration: float,
-                 weight: float,
-                 ) -> None:
-        self.action = action
-        self.duration = duration
-        self.weight = weight
+    action: int
+    duration: float
+    weight: float
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
@@ -57,11 +54,12 @@ class Training:
                            self.get_spent_calories())
 
 
+@dataclass()
 class Running(Training):
     """Тренировка: бег."""
 
-    CALORIES_MEAN_SPEED_MULTIPLIER = 18
-    CALORIES_MEAN_SPEED_SHIFT = 1.79
+    CALORIES_MEAN_SPEED_MULTIPLIER: ClassVar = 18
+    CALORIES_MEAN_SPEED_SHIFT: ClassVar = 1.79
 
     def get_spent_calories(self) -> float:
         return ((self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
@@ -69,21 +67,15 @@ class Running(Training):
                 * self.weight / self.M_IN_KM * self.duration * self.MIN_IN_H)
 
 
+@dataclass
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
 
-    CALORIES_WEIGHT_MULTIPLIER = 0.035
-    CALORIES_SPEED_HEIGHT_MULTIPLIER = 0.029
-    KMH_IN_MSEC = round(1000 / 3600, 3)
-    CM_IN_M = 100
-
-    def __init__(self,
-                 action: int,
-                 duration: float,
-                 weight: float,
-                 height: int) -> None:
-        super().__init__(action, duration, weight)
-        self.height = height
+    CALORIES_WEIGHT_MULTIPLIER: ClassVar = 0.035
+    CALORIES_SPEED_HEIGHT_MULTIPLIER: ClassVar = 0.029
+    KMH_IN_MSEC: ClassVar = round(1000 / 3600, 3)
+    CM_IN_M: ClassVar = 100
+    height: int
 
     def get_spent_calories(self) -> float:
         return ((self.CALORIES_WEIGHT_MULTIPLIER * self.weight
@@ -93,22 +85,15 @@ class SportsWalking(Training):
                 * self.duration * self.MIN_IN_H)
 
 
+@dataclass
 class Swimming(Training):
     """Тренировка: плавание."""
 
     LEN_STEP = 1.38
     CALORIES_MEAN_SPEED_SHIFT = 1.1
     CALORIES_MEAN_SPEED_MULTIPLIER = 2
-
-    def __init__(self,
-                 action: int,
-                 duration: float,
-                 weight: float,
-                 length_pool: int,
-                 count_pool: int) -> None:
-        super().__init__(action, duration, weight)
-        self.length_pool = length_pool
-        self.count_pool = count_pool
+    length_pool: int
+    count_pool: int
 
     def get_mean_speed(self) -> float:
         return (self.length_pool * self.count_pool
@@ -120,13 +105,13 @@ class Swimming(Training):
                 * self.weight * self.duration)
 
 
-def read_package(workout_type: str, data: list) -> Training:
+def read_package(workout_type: str, data: List[Union[int, float]]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_classes: dict[str, Training] = {'SWM': Swimming,
+    training_classes: Dict[str, Training] = {'SWM': Swimming,
                                              'RUN': Running,
                                              'WLK': SportsWalking}
     try:
-        train: Training = training_classes[workout_type]  # type: ignore
+        train: Training = training_classes[workout_type]
     except KeyError as e:
         print('Аббривиатура тренировки не найдена', e)
     return train(*data)  # type: ignore
