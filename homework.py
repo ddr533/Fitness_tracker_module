@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, List, Union, ClassVar
+from typing import ClassVar, Type, Optional
 
 
 @dataclass
@@ -105,21 +105,21 @@ class Swimming(Training):
                 * self.weight * self.duration)
 
 
-def read_package(workout_type: str, data: List[Union[int, float]]) -> Training:
+def read_package(workout_type: str, data: list[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_classes: Dict[str, Training] = {'SWM': Swimming,
-                                             'RUN': Running,
-                                             'WLK': SportsWalking}
-    try:
-        train: Training = training_classes[workout_type]
-    except KeyError as e:
-        print('Аббривиатура тренировки не найдена', e)
-    return train(*data)  # type: ignore
+    training_classes: dict[str, Type[Training]] = {'SWM': Swimming,
+                                                   'RUN': Running,
+                                                   'WLK': SportsWalking}
+    train: Optional[Type[Training]] = training_classes.get(workout_type)
+    if not train:
+        raise Exception('Ключ имени класса тренировки не найден в словаре')
+    else:
+        return train(*data)
 
 
 def main(training: Training) -> None:
     """Главная функция."""
-    info = training.show_training_info()
+    info: InfoMessage = training.show_training_info()
     print(info.get_message())
 
 
