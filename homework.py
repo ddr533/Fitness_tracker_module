@@ -113,8 +113,7 @@ def read_package(workout_type: str, data: List[int]) -> Training:
     train: Optional[Type[Training]] = training_classes.get(workout_type)
     if not train:
         raise Exception('Ключ имени класса тренировки не найден в словаре')
-    else:
-        return train(*data)
+    return train(*data)
 
 
 def main(training: Training) -> None:
