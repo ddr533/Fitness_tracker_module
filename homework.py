@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import ClassVar, Type, Optional, List
+from typing import ClassVar, Type, Optional, List, Union
 
 
 @dataclass
@@ -89,9 +89,9 @@ class SportsWalking(Training):
 class Swimming(Training):
     """Тренировка: плавание."""
 
-    LEN_STEP = 1.38
-    CALORIES_MEAN_SPEED_SHIFT = 1.1
-    CALORIES_MEAN_SPEED_MULTIPLIER = 2
+    LEN_STEP: ClassVar = 1.38
+    CALORIES_MEAN_SPEED_SHIFT: ClassVar = 1.1
+    CALORIES_MEAN_SPEED_MULTIPLIER: ClassVar = 2
     length_pool: int
     count_pool: int
 
@@ -105,7 +105,7 @@ class Swimming(Training):
                 * self.weight * self.duration)
 
 
-def read_package(workout_type: str, data: List[int]) -> Training:
+def read_package(workout_type: str, data: List[Union[int, float]]) -> Training:
     """Прочитать данные полученные от датчиков."""
     training_classes: dict[str, Type[Training]] = {'SWM': Swimming,
                                                    'RUN': Running,
