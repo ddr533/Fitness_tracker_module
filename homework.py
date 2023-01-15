@@ -24,9 +24,9 @@ class InfoMessage:
 class Training:
     """Базовый класс тренировки."""
 
-    LEN_STEP: ClassVar = 0.65
-    M_IN_KM: ClassVar = 1000
-    MIN_IN_H: ClassVar = 60
+    LEN_STEP: ClassVar[float] = 0.65
+    M_IN_KM: ClassVar[int] = 1000
+    MIN_IN_H: ClassVar[int] = 60
 
     action: int
     duration: float
@@ -58,8 +58,8 @@ class Training:
 class Running(Training):
     """Тренировка: бег."""
 
-    CALORIES_MEAN_SPEED_MULTIPLIER: ClassVar = 18
-    CALORIES_MEAN_SPEED_SHIFT: ClassVar = 1.79
+    CALORIES_MEAN_SPEED_MULTIPLIER: ClassVar[int] = 18
+    CALORIES_MEAN_SPEED_SHIFT: ClassVar[float] = 1.79
 
     def get_spent_calories(self) -> float:
         return ((self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
@@ -71,9 +71,9 @@ class Running(Training):
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
 
-    CALORIES_WEIGHT_MULTIPLIER: ClassVar = 0.035
-    CALORIES_SPEED_HEIGHT_MULTIPLIER: ClassVar = 0.029
-    KMH_IN_MSEC: ClassVar = round(1000 / 3600, 3)
+    CALORIES_WEIGHT_MULTIPLIER: ClassVar[float] = 0.035
+    CALORIES_SPEED_HEIGHT_MULTIPLIER: ClassVar[float] = 0.029
+    KMH_IN_MSEC: ClassVar[float] = round(1000 / 3600, 3)
     CM_IN_M: ClassVar = 100
     height: int
 
@@ -89,9 +89,9 @@ class SportsWalking(Training):
 class Swimming(Training):
     """Тренировка: плавание."""
 
-    LEN_STEP: ClassVar = 1.38
-    CALORIES_MEAN_SPEED_SHIFT: ClassVar = 1.1
-    CALORIES_MEAN_SPEED_MULTIPLIER: ClassVar = 2
+    LEN_STEP: ClassVar[float] = 1.38
+    CALORIES_MEAN_SPEED_SHIFT: ClassVar[float] = 1.1
+    CALORIES_MEAN_SPEED_MULTIPLIER: ClassVar[float] = 2
     length_pool: int
     count_pool: int
 
