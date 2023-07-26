@@ -43,6 +43,8 @@
 ```
 python fitnes_tracker.py
 ```
+
+#### Следующий update - прикрутить БД к модулю.
    
 #### Автор
 Andrey D.
